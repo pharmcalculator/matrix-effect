@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Matrix Effect Calculation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-top: 40px;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .table-container {
+      margin: 0 20px;
+    }
+
+    table {
+      margin: 0 auto;
+      border-collapse: collapse
+      width: 600px;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    input[type="number"] {
+      width: 100px;
+      font-size: 20px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 28px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .result-table {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .result-table th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .result-table td {
+      padding: 20px;
+    }
+
+    p {
+      font-size: 24px;
+    }
+  </style>
+  <script>
+    function calculateMatrixEffect() {
+      var concentrations = ["High", "Medium", "Low"];
+      concentrations.forEach(function(concentration) {
+        var matrixValues = getPeakAreaValues(concentration + "MatrixPeakArea");
+        var waterValues = getPeakAreaValues(concentration + "WaterPeakArea");
+        var matrixEffect = calculateMatrixEffectValues(matrixValues, waterValues);
+        var meanMatrixEffect = calculateMean(matrixEffect);
+        var standardDeviation = calculateStandardDeviation(matrixEffect);
+        displayMatrixEffect(concentration, meanMatrixEffect);
+        displayStandardDeviation(concentration, standardDeviation);
+      });
+    }
+
+    function getPeakAreaValues(inputId) {
+      var peakAreaValues = [];
+      var inputs = document.getElementsByClassName(inputId);
+      for (var i = 0; i < inputs.length; i++) {
+        peakAreaValues.push(parseFloat(inputs[i].value));
+      }
+      return peakAreaValues;
+    }
+
+    function calculateMatrixEffectValues(matrixValues, waterValues) {
+      var matrixEffectValues = [];
+      for (var i = 0; i < matrixValues.length; i++) {
+        var matrixEffect = (matrixValues[i] / waterValues[i]) * 100;
+        matrixEffectValues.push(matrixEffect);
+      }
+      return matrixEffectValues;
+    }
+
+    function calculateMean(values) {
+      var sum = values.reduce(function(a, b) {
+        return a + b;
+      }, 0);
+      return sum / values.length;
+    }
+
+    function calculateStandardDeviation(values) {
+      var mean = calculateMean(values);
+      var squareDiffs = values.map(function(value) {
+        var diff = value - mean;
+        return diff * diff;
+      });
+      var avgSquareDiff = calculateMean(squareDiffs);
+      return Math.sqrt(avgSquareDiff);
+    }
+
+    function displayMatrixEffect(concentration, meanMatrixEffect) {
+      var matrixEffectElement = document.getElementById(concentration + "MeanRecovery");
+      matrixEffectElement.textContent = meanMatrixEffect.toFixed(2) + "%";
+    }
+
+    function displayStandardDeviation(concentration, standardDeviation) {
+      var standardDeviationElement = document.getElementById(concentration + "StandardDeviation");
+      standardDeviationElement.textContent = standardDeviation.toFixed(2);
+    }
+  </script>
+</head>
+<body>
+  <h1>Matrix Effect Calculation</h1>
+  <p>Matrix Effect(%)=Peak area from samples spiked in matrix from biological blank/Peak area from samples spiked in matrix from water x 100.</p>
+  <p>Here you need to extract the blank biological matrix (e.g., plasma, tissue, urine, feces) or water first, then spike your drug into the matrix followed by injection.</p>
+  <p>Please use the original peak area for your calculation. DO NOT use the calculated concentrations.</p>
+  <div class="container">
+    <div class="table-container">
+      <h2>High Concentration</h2>
+      <table>
+        <tr>
+          <th>Sample</th>
+          <th>Peak Area in Biological Matrix</th>
+          <th>PeakArea in Water</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td><input type="number" class="HighMatrixPeakArea"></td>
+          <td><input type="number" class="HighWaterPeakArea"></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><input type="number" class="HighMatrixPeakArea"></td>
+          <td><input type="number" class="HighWaterPeakArea"></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><input type="number" class="HighMatrixPeakArea"></td>
+          <td><input type="number" class="HighWaterPeakArea"></td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-container">
+      <h2>Medium Concentration</h2>
+      <table>
+        <tr>
+          <th>Sample</th>
+          <th>Peak Area in Biological Matrix</th>
+          <th>Peak Area in Water</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td><input type="number" class="MediumMatrixPeakArea"></td>
+          <td><input type="number" class="MediumWaterPeakArea"></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><input type="number" class="MediumMatrixPeakArea"></td>
+          <td><input type="number" class="MediumWaterPeakArea"></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><input type="number" class="MediumMatrixPeakArea"></td>
+          <td><input type="number" class="MediumWaterPeakArea"></td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-container">
+      <h2>Low Concentration</h2>
+      <table>
+        <tr>
+          <th>Sample</th>
+          <th>Peak Area in Biological Matrix</th>
+          <th>Peak Area in Water</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td><input type="number" class="LowMatrixPeakArea"></td>
+          <td><input type="number" class="LowWaterPeakArea"></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><input type="number" class="LowMatrixPeakArea"></td>
+          <td><input type="number" class="LowWaterPeakArea"></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><input type="number" class="LowMatrixPeakArea"></td>
+          <td><input type="number" class="LowWaterPeakArea"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <button onclick="calculateMatrixEffect()">Calculate</button>
+  <div class="container">
+    <div class="table-container">
+      <table class="result-table">
+        <tr>
+          <th>Concentration</th>
+          <th>Mean Matrix Effect (%)</th>
+          <th>Standard Deviation</th>
+        </tr>
+        <tr>
+          <td>High</td>
+          <td id="HighMeanRecovery"></td>
+          <td id="HighStandardDeviation"></td>
+        </tr>
+        <tr>
+          <td>Medium</td>
+          <td id="MediumMeanRecovery"></td>
+          <td id="MediumStandardDeviation"></td>
+        </tr>
+        <tr>
+          <td>Low</td>
+          <td id="LowMeanRecovery"></td>
+          <td id="LowStandardDeviation"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
